@@ -4,11 +4,11 @@ import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
 
 import { api } from '~/convex/_generated/api';
-import images from '~/images';
 import Layout from './Layout';
 import { Button } from '~/components/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import DocumentIdPage from './DocumentIdPage';
+import images from '~/images';
 
 function Documents() {
     const params = useParams();
