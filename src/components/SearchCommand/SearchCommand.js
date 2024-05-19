@@ -58,7 +58,7 @@ function SearchCommand() {
             </div>
 
             <CommandList>
-                {filteredDocuments.length > 0 ? (
+                {filteredDocuments?.length > 0 ? (
                     filteredDocuments.map((document) => (
                         <CommandItem key={document._id} onSelect={() => onSelect(document._id)}>
                             {document.icon ? (
