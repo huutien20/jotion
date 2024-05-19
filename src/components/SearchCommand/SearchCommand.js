@@ -2,9 +2,9 @@ import { useQuery } from 'convex/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '~/convex/_generated/api';
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../Command';
+import { CommandDialog, CommandInput, CommandItem, CommandList } from '../Command';
 import { useSearch } from '~/hooks/useSearch';
-import { File } from 'lucide-react';
+import { File, Search } from 'lucide-react';
 
 function SearchCommand() {
     const navigate = useNavigate();
@@ -15,6 +15,10 @@ function SearchCommand() {
     const toggle = useSearch((store) => store.toggle);
     const isOpen = useSearch((store) => store.isOpen);
     const onClose = useSearch((store) => store.onClose);
+
+    const filteredDocuments = documents?.filter((document) =>
+        document.title.toLowerCase().includes(searchValue.toLowerCase()),
+    );
 
     useEffect(() => {
         setIsMounted(true);
@@ -43,21 +47,20 @@ function SearchCommand() {
 
     return (
         <CommandDialog open={isOpen} onOpenChange={onClose}>
-            <CommandInput
-                placeholder="Search document..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-            />
+            <div className="flex items-center gap-x-1 px-2 border-b">
+                <Search size={16} className="cursor-pointer" />
+
+                <CommandInput
+                    placeholder="Search document by page title..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                />
+            </div>
+
             <CommandList>
-                <CommandGroup heading="Documents">
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    {documents?.map((document) => (
-                        <CommandItem
-                            key={document._id}
-                            // value={`${document._id}-${document.title}`}
-                            // title={document.title}
-                            onSelect={() => onSelect(document._id)}
-                        >
+                {filteredDocuments.length > 0 ? (
+                    filteredDocuments.map((document) => (
+                        <CommandItem key={document._id} onSelect={() => onSelect(document._id)}>
                             {document.icon ? (
                                 <p className="mr-2 text-[18px]">{document.icon}</p>
                             ) : (
@@ -65,8 +68,10 @@ function SearchCommand() {
                             )}
                             <span>{document.title}</span>
                         </CommandItem>
-                    ))}
-                </CommandGroup>
+                    ))
+                ) : (
+                    <div className="text-center text-sm text-muted-foreground border-t py-1">No results found.</div>
+                )}
             </CommandList>
         </CommandDialog>
     );

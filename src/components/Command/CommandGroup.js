@@ -4,7 +4,7 @@ import CommandEmpty from './CommandEmpty';
 
 const CommandGroup = ({ children, heading }) => {
     const childArray = Children.toArray(children);
-    const commandItem = childArray.find((child) => child.type === CommandItem);
+    const commandItem = childArray.filter((child) => child.type === CommandItem);
     const commandEmpty = childArray.find((child) => child.type === CommandEmpty);
 
     return (
